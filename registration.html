@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+ 
+<head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link rel="stylesheet" href="registration.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">Registration</div>
+        <div class="content">
+            <form id="registrationForm">
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Full Name</span>
+                        <input type="text" name="fullName" placeholder="Enter your name" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Username</span>
+                        <input type="text" name="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Email</span>
+                        <input type="text" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Phone Number</span>
+                        <input type="text" name="phone" placeholder="Enter your number" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Password</span>
+                        <input type="text" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Confirm Password</span>
+                        <input type="text" name="confirmPasword" placeholder="Confirm your password" required>
+                    </div>
+                </div>
+                <!-- <div class="gender-details">
+                    <input type="radio" name="gender" id="dot-1">
+                    <input type="radio" name="gender" id="dot-2">
+                    <input type="radio" name="gender" id="dot-3">
+                    <span class="gender-title">Gender</span>
+                    <div class="category">
+                        <label for="dot-1">
+                            <span class="dot one"></span>
+                            <span class="gender">Male</span>
+                        </label>
+                        <label for="dot-2">
+                            <span class="dot two"></span>
+                            <span class="gender">Female</span>
+                        </label>
+                        <label for="dot-3">
+                            <span class="dot three"></span>
+                            <span class="gender">Prefer not to say</span>
+                        </label>
+                    </div>
+                </div> -->
+                <div class="button">
+                    <input type="submit" value="Register">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const regForm = document.querySelector("#registrationForm");
+        regForm.addEventListener("submit", e => {
+            e.preventDefault();
+            const {fullName,username,email,password,phone} = e.target;
+            const data = {
+                fullName:fullName.value,
+                username:username.value,
+                email:email.value,
+                password:password.value,
+                phone:phone.value
+            }
+            console.log(data);
+            fetch("http://localhost:3000/register", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify(data)
+            }).then(async response => {
+                const resJson = await response.json();
+                if(response.status === 200){
+                    alert("Registed");
+                    console.log(resJson);
+                    // document.cookie = "loggedIn="+JSON.stringify(resJson);
+                    location.href = "/frontend/after_login.html";
+                }else{
+
+                    alert("Error:", resJson.error);
+                }
+            }).catch(err => {
+                alert("Error");
+                console.log(err);
+            })
+        })
+    </script>
+</body>
+
+</html>

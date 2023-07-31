@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/frontend/cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Your Cart</title>
+
+     <!-- Bootstrap 5 CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+      
+     <!-- Style CSS -->
+     <link rel="stylesheet" href="/css/style.css">
+     <!-- Demo CSS (No need to include it into your project) -->
+     <link rel="stylesheet" href="css/demo.css">
+   
+</head>
+
+<body>
+
+    <header>
+
+        <div class="header-1">
+    
+            <div class="share">
+                <span> follow us : </span>
+                <a href="https://www.facebook.com/" class="fab fa-facebook-f"></a>
+                <a href="https://twitter.com/" class="fab fa-twitter"></a>
+                <a href="https://instagram.com/" class="fab fa-instagram"></a>
+                <a href="#" class="fab fa-linkedin"></a>
+            </div>
+    
+            <div class="call">
+                <span> call us : </span>
+                <a href="#">00000000000</a>
+            </div>
+    
+        </div>
+    
+        <div class="header-2">
+    
+            <a href="#" class="logo"><img src="/frontend/images/plany house.png"></a>
+    
+        </div>
+    
+        </div>
+    
+      </header>
+     <div class="class">
+
+      <!-- <a href="/frontend/payment.html" target="_blank"><button>Buy Now</button></a> -->
+      <a href="/frontend/payment.html" target="_blank">Buy Now</a>
+      
+     </div>
+
+
+      <!-- <button style="height: 40px;"></button> -->
+
+
+
+
+
+
+  <!-- <button style="height: 40px;">Buy Now</button> -->
+
+    <script>
+        const cartHtml = ""
+        async function fetchCart() {
+            const response = await fetch("http://localhost:3000/cart/63617d6589edd6907f32a1db");
+            const resJson = await response.json();
+            resJson.forEach(rs => {
+                const html = `
+            <div class="cartItem">
+                <h3>${rs.name}</h3>
+                <span class="quantiy">Quantity:${rs.quantity}</span>
+                <span class="price">&nbsp;Rs.:${rs.price}</span>
+            </div>
+            `
+                const div = document.createElement("div");
+                div.innerHTML = html;
+                document.body.appendChild(div);
+            })
+
+            
+            
+        }
+        fetchCart();
+       
+
+        var taxRate = 0.05;
+var shipping = 15.0;
+$(function() {
+  var jsonData = [
+    {
+      title: "Item 1",
+      price: 38,
+      quantity: 1,
+      total: 38
+    },
+    {
+      title: "Item 2",
+      price: 23.5,
+      quantity: 1,
+      total: 23.5
+    },
+    {
+      title: "Item 3",
+      price: 100,
+      quantity: 1,
+      total: 100
+    },
+    {
+      title: "Item 4",
+      price: 45,
+      quantity: 1,
+      total: 45
+    },
+    {
+      title: "Item 5",
+      price: 66,
+      quantity: 1,
+      total: 66
+    },
+    {
+      title: "Item 6",
+      price: 199,
+      quantity: 1,
+      total: 199
+    }
+  ];
+  var html = "<tbody>";
+  $.each(jsonData, function() {
+    html +=
+      '<tr class="cart-item">' +
+      "        <td>" +
+      '          <input type="checkbox" class="cart-item-check" checked />' +
+      "        </td>" +
+      "        <td>" +
+      "          " +
+      this.title +
+      "        </td>" +
+      "        <td>$" +
+      this.price +
+      "</td>" +
+      "        <td>" +
+      '          <input class="input is-primary cart-item-qty" style="width:100px" type="number" min="1" value="' +
+      this.quantity +
+      '" data-price="' +
+      this.price +
+      '">' +
+      "        </td>" +
+      '        <td class="cart-item-total">$' +
+      this.total +
+      "</td>" +
+      "        <td>" +
+      '          <a class="button is-small">Remove</a>' +
+      "        </td>" +
+      "      </tr>";
+  });
+  html += "</tbody>";
+  $(".shopping-cart").append(html);
+  
+  recalculateCart();
+
+  $(".cart-item-check").change(function() {
+    recalculateCart();
+  });
+
+  $(".cart-item-qty").change(function() {
+    var $this = $(this);
+    var parent = $this.parent().parent();
+    parent.find(".cart-item-check").prop("checked", "checked");
+    var price = $this.attr("data-price");
+    var quantity = $this.val();
+    var total = price * quantity;
+    parent.find(".cart-item-total").html(total.toFixed(2));
+    recalculateCart();
+  });
+
+  $(".button").click(function() {
+    var parent = $(this)
+      .parent()
+      .parent();
+    parent.remove();
+    recalculateCart();
+  });
+});
+function recalculateCart() {
+  var subTotal = 0;
+  var grandTotal = 0;
+  var tax = 0;
+  var items = $(".cart-item");
+  $.each(items, function() {
+    var itemCheck = $(this).find(".cart-item-check");
+    var itemQuantity = $(this).find(".cart-item-qty");
+    if (itemCheck.prop("checked")) {
+      var itemTotal = itemQuantity.val() * itemQuantity.attr("data-price");
+      subTotal += itemTotal;
+    }
+  });
+  if (subTotal > 0) {
+    tax = subTotal * taxRate;
+    grandTotal = subTotal + tax + shipping;
+    $(".totals,.checkout").show();
+  } else {
+    $(".totals,.checkout").hide();
+  }
+  $("#cart-subtotal").html(subTotal.toFixed(2));
+  $("#cart-total").html(grandTotal.toFixed(2));
+  $("#cart-tax").html(tax.toFixed(2));
+  $("#cart-shipping").html(shipping.toFixed(2));
+}
+
+    </script>
+</body>
+
+</html>
